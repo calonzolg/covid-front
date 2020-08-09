@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -10,9 +10,10 @@ import {
   Text,
   Spinner,
   Stack,
-} from "@chakra-ui/core";
-import SearchInput from "../../components/SearchInput";
-import { formatNumber } from "../../utils";
+} from '@chakra-ui/core';
+
+import SearchInput from 'components/SearchInput';
+import formatNumber from 'utils/formatNumber';
 
 const url = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/countries`;
 

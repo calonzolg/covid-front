@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { For } from "react-loops";
-import { useParams } from "react-router-dom";
-import { Spinner, Stack, Box, Heading, Text } from "@chakra-ui/core";
-import { formatNumber } from "../../utils";
-import NotFound from "../NotFound";
+import React, { useEffect, useState } from 'react';
+import { For } from 'react-loops';
+import { useParams } from 'react-router-dom';
+import { Spinner, Stack, Box, Heading, Text } from '@chakra-ui/core';
+
+import SearchInput from 'components/SearchInput';
+import NotFound from 'pages/NotFound';
+import formatNumber from 'utils/formatNumber';
 
 const url = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/countries`;
 
@@ -39,6 +41,8 @@ export default function Details() {
 
   return (
     <Stack minW="500px" justifyContent="center" textAlign="center" shadow="md">
+      <SearchInput />
+
       <Heading>{countryArray.country}</Heading>
 
       <Box my={2}>
@@ -55,7 +59,7 @@ export default function Details() {
             as={(countryCase, { key }) => (
               <>
                 <Text textTransform="capitalize">{key}</Text>
-                <Box>{formatNumber(countryCase) ?? "N/A"}</Box>
+                <Box>{formatNumber(countryCase) ?? 'N/A'}</Box>
               </>
             )}
           />
@@ -70,7 +74,7 @@ export default function Details() {
             as={(countryCase, { key }) => (
               <>
                 <Text textTransform="capitalize">{key}</Text>
-                <Box>{formatNumber(countryCase) ?? "N/A"}</Box>
+                <Box>{formatNumber(countryCase) ?? 'N/A'}</Box>
               </>
             )}
           />
@@ -84,7 +88,7 @@ export default function Details() {
               as={(countryCase, { key }) => (
                 <>
                   <Text textTransform="capitalize">{key}</Text>
-                  <Box>{formatNumber(countryCase) ?? "N/A"}</Box>
+                  <Box>{formatNumber(countryCase) ?? 'N/A'}</Box>
                 </>
               )}
             />

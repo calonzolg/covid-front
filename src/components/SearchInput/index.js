@@ -1,16 +1,15 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { Input, FormControl, FormLabel, Box, Text } from "@chakra-ui/core";
-import debounce from "lodash.debounce";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Input, FormControl, FormLabel, Box, Text } from '@chakra-ui/core';
+import { Link } from 'react-router-dom';
 
 const searchUrl = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/search`;
 
 const searchCountry = async (searchParam, setSearchResult) => {
   try {
     const response = await fetch(searchUrl, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
+        'Content-type': 'application/json; charset=UTF-8',
       },
       body: JSON.stringify({ searchParam }),
     });
@@ -27,21 +26,27 @@ const searchCountry = async (searchParam, setSearchResult) => {
   }
 };
 
-export default function SearchInput() {
-  const [searchText, setSearchText] = useState("");
-  const [searchResult, setSearchResult] = useState(undefined);
-  const [debounceValue, setDebounceValue] = useState("");
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-  const delay = useCallback(
-    debounce((value) => {
-      setDebounceValue(value);
-    }, 500),
-    []
-  );
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedValue(value), delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export default function SearchInput() {
+  const [searchText, setSearchText] = useState('');
+  const [searchResult, setSearchResult] = useState(undefined);
+  const debounceValue = useDebounce(searchText, 500);
 
   function handleChange({ target: { value } }) {
     setSearchText(value);
-    delay(value);
   }
 
   useEffect(() => {
@@ -64,7 +69,7 @@ export default function SearchInput() {
             <Box>
               <Text>{continent.name}</Text>
               {continent.countries.map((country) => (
-                <Box as={Link} to={`country/${country.slug}`}>
+                <Box as={Link} to={`/country/${country.slug}`}>
                   {country.name}
                 </Box>
               ))}
