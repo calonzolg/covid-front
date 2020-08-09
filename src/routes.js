@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Details from "./pages/Details";
+import NotFound from "./pages/NotFound";
 
 export default function Routes() {
   return (
@@ -10,8 +11,12 @@ export default function Routes() {
         <Route exact path="/">
           <Home />
         </Route>
-        <Route path="/country/:country">
+        <Route path="/country/:slug">
           <Details />
+        </Route>
+
+        <Route path="*">
+          <NotFound />
         </Route>
       </Switch>
     </Router>
