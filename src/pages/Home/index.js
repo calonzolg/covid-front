@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { For } from 'react-loops';
 import {
   Accordion,
-  AccordionItem,
   AccordionHeader,
-  AccordionPanel,
   AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Badge,
   Box,
+  Divider,
   Grid,
-  Text,
   Spinner,
   Stack,
+  Text,
+  Flex,
 } from '@chakra-ui/core';
 
-import SearchInput from 'components/SearchInput';
 import formatNumber from 'utils/formatNumber';
+import Layout from 'components/Layout';
 
 const url = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/countries`;
 
@@ -29,6 +33,14 @@ const fetchCountries = async (setContinents) => {
   }
 };
 
+function StackInline({ children }) {
+  return (
+    <Stack isInline alignItems="center" justifyContent="space-between">
+      {children}
+    </Stack>
+  );
+}
+
 export default function Home() {
   const [continents, setContinents] = useState([]);
 
@@ -36,41 +48,76 @@ export default function Home() {
     fetchCountries(setContinents);
   }, []);
 
-  if (!(continents.length > 0)) {
-    return <Spinner />;
-  }
-
   return (
-    <Stack flex="1">
-      <SearchInput />
-      <Grid>
-        <Accordion>
-          {continents.map((continent) => (
-            <AccordionItem>
-              <AccordionHeader>
-                <Box flex="1" textAlign="left">
-                  {continent.name}
-                </Box>
-                <AccordionIcon />
-              </AccordionHeader>
-              <AccordionPanel pb={4}>
-                <Grid
-                  gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))"
-                  gridGap={5}
-                >
-                  {continent.countries.map((country) => (
-                    <Box shadow="md">
-                      <Text>{country.name}</Text>
-                      <Text>{formatNumber(country.cases.total)}</Text>
-                      <Text>{country.last_update}</Text>
-                    </Box>
-                  ))}
-                </Grid>
-              </AccordionPanel>
-            </AccordionItem>
-          ))}
+    <Layout>
+      {!(continents.length > 0) ? (
+        <Flex p={2} alignItems="center" justifyContent="center">
+          <Spinner />
+        </Flex>
+      ) : (
+        <Accordion defaultIndex={[0]} allowMultiple>
+          <For
+            of={continents}
+            as={(continent) => (
+              <AccordionItem>
+                <AccordionHeader bg="gray.100">
+                  <Box flex="1" textAlign="left">
+                    {continent.name}
+                  </Box>
+                  <AccordionIcon />
+                </AccordionHeader>
+                <AccordionPanel pb={4}>
+                  <Grid
+                    gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))"
+                    gridGap={5}
+                  >
+                    <For
+                      of={continent.countries}
+                      as={(country) => (
+                        <Box
+                          shadow="md"
+                          borderWidth="1px"
+                          borderColor="gray.100"
+                          borderRadius="md"
+                          p={3}
+                        >
+                          <Stack>
+                            <StackInline>
+                              <Badge>Country</Badge>
+                              <Text>{country.name}</Text>
+                            </StackInline>
+                            <Divider />
+                            <StackInline>
+                              <Badge variantColor="blue">Population</Badge>
+                              <Text>
+                                {formatNumber(country.population) ?? 'N/A'}
+                              </Text>
+                            </StackInline>
+                            <Divider />
+                            <StackInline>
+                              <Badge variantColor="red">Total Cases</Badge>
+                              <Text>{formatNumber(country.cases.total)}</Text>
+                            </StackInline>
+                            <Divider />
+                            <Stack
+                              isInline
+                              alignItems="center"
+                              justifyContent="flex-end"
+                            >
+                              <Badge variantColor="green">Last Update</Badge>
+                              <Text>{country.last_update}</Text>
+                            </Stack>
+                          </Stack>
+                        </Box>
+                      )}
+                    />
+                  </Grid>
+                </AccordionPanel>
+              </AccordionItem>
+            )}
+          />
         </Accordion>
-      </Grid>
-    </Stack>
+      )}
+    </Layout>
   );
 }
