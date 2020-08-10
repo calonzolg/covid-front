@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { For } from 'react-loops';
 import { useParams } from 'react-router-dom';
-import { Spinner, Stack, Box, Heading, Text } from '@chakra-ui/core';
+import {
+  Spinner,
+  Box,
+  Heading,
+  Text,
+  Stack,
+  Grid,
+  Badge,
+  Divider,
+} from '@chakra-ui/core';
 
-import SearchInput from 'components/SearchInput';
+import Layout from 'components/Layout';
 import NotFound from 'pages/NotFound';
 import formatNumber from 'utils/formatNumber';
 
@@ -20,6 +29,35 @@ const fetchCountry = async (setState, slug) => {
     console.log(error);
   }
 };
+
+function StatisticsStack({ keyValue, value }) {
+  function handleVariantColor(val) {
+    switch (val) {
+      case 'recovered':
+        return 'green';
+
+      case 'critical':
+        return 'red';
+
+      case 'new':
+        return 'blue';
+
+      default:
+        return 'gray';
+    }
+  }
+
+  return (
+    <Stack isInline alignItems="center">
+      <Text textTransform="capitalize" fontWeight="Bold">
+        {keyValue}:
+      </Text>
+      <Badge fontSize="xl" variantColor={handleVariantColor(keyValue)}>
+        {formatNumber(value) ?? 'N/A'}
+      </Badge>
+    </Stack>
+  );
+}
 
 export default function Details() {
   const { slug } = useParams();
@@ -40,61 +78,87 @@ export default function Details() {
   const countryArray = country[0];
 
   return (
-    <Stack minW="500px" justifyContent="center" textAlign="center" shadow="md">
-      <SearchInput />
+    <Layout>
+      <Box p={2}>
+        <Heading>{countryArray.country}</Heading>
 
-      <Heading>{countryArray.country}</Heading>
+        <Box my={2}>
+          <Stack isInline alignItems="center">
+            <Text fontWeight="bold" fontSize="lg">
+              Continent:
+            </Text>
+            <Text>{countryArray.continent}</Text>
+          </Stack>
 
-      <Box my={2}>
-        <Text>{countryArray.continent}</Text>
-        <Text>{formatNumber(countryArray.population)}</Text>
-        <Text>{countryArray.day}</Text>
-      </Box>
+          <Stack isInline alignItems="center">
+            <Text fontWeight="bold" fontSize="lg">
+              Population:
+            </Text>
+            <Text>{formatNumber(countryArray.population)}</Text>
+          </Stack>
 
-      <Box>
-        <Text>Cases</Text>
-        <Box>
-          <For
-            in={countryArray.cases}
-            as={(countryCase, { key }) => (
-              <>
-                <Text textTransform="capitalize">{key}</Text>
-                <Box>{formatNumber(countryCase) ?? 'N/A'}</Box>
-              </>
-            )}
-          />
+          <Stack isInline alignItems="center">
+            <Text fontWeight="bold" fontSize="lg">
+              Last Update:
+            </Text>
+            <Text>{countryArray.day}</Text>
+          </Stack>
         </Box>
-      </Box>
-
-      <Box>
-        <Text>Deaths</Text>
-        <Box>
-          <For
-            in={countryArray.deaths}
-            as={(countryCase, { key }) => (
-              <>
-                <Text textTransform="capitalize">{key}</Text>
-                <Box>{formatNumber(countryCase) ?? 'N/A'}</Box>
-              </>
-            )}
-          />
-        </Box>
-
-        <Box>
-          <Text>Tests</Text>
-          <Box>
+        <Divider />
+        <Box my={4}>
+          <Heading fontWeight="regular">Cases</Heading>
+          <Grid
+            gridTemplateColumns={[
+              'repeat(auto-fit, minmax(250px, 1fr))',
+              'repeat(2, 1fr)',
+            ]}
+            gridGap={3}
+          >
             <For
-              in={countryArray.tests}
+              in={countryArray.cases}
               as={(countryCase, { key }) => (
-                <>
-                  <Text textTransform="capitalize">{key}</Text>
-                  <Box>{formatNumber(countryCase) ?? 'N/A'}</Box>
-                </>
+                <StatisticsStack keyValue={key} value={countryCase} />
               )}
             />
-          </Box>
+          </Grid>
+        </Box>
+        <Divider />
+        <Box my={4}>
+          <Heading fontWeight="regular">Deaths</Heading>
+          <Grid
+            gridTemplateColumns={[
+              'repeat(auto-fit, minmax(250px, 1fr))',
+              'repeat(2, 1fr)',
+            ]}
+            gridGap={3}
+          >
+            <For
+              in={countryArray.deaths}
+              as={(countryDeath, { key }) => (
+                <StatisticsStack keyValue={key} value={countryDeath} />
+              )}
+            />
+          </Grid>
+        </Box>
+        <Divider />
+        <Box my={4}>
+          <Heading fontWeight="regular">Tests</Heading>
+          <Grid
+            gridTemplateColumns={[
+              'repeat(auto-fit, minmax(200px, 1fr))',
+              'repeat(2, 1fr)',
+            ]}
+            gridGap={3}
+          >
+            <For
+              in={countryArray.tests}
+              as={(countryTest, { key }) => (
+                <StatisticsStack keyValue={key} value={countryTest} />
+              )}
+            />
+          </Grid>
         </Box>
       </Box>
-    </Stack>
+    </Layout>
   );
 }
