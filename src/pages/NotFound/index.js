@@ -1,7 +1,7 @@
-import React from 'react';
-import { Flex, Text } from '@chakra-ui/core';
-import { Link } from 'react-router-dom';
-import Layout from 'components/Layout';
+import React from 'react'
+import {Flex, Text} from '@chakra-ui/react'
+import {Link} from 'react-router-dom'
+import Layout from 'components/Layout'
 
 export default function NotFound() {
   return (
@@ -19,5 +19,5 @@ export default function NotFound() {
         <Link to="/">got to home</Link>
       </Flex>
     </Layout>
-  );
+  )
 }

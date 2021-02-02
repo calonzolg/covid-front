@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState, useEffect, useRef} from 'react'
+import {Link} from 'react-router-dom'
 import {
   Box,
   Input,
@@ -7,11 +7,10 @@ import {
   InputRightElement,
   Spinner,
   useDisclosure,
-  PseudoBox,
-} from '@chakra-ui/core';
-import { For } from 'react-loops';
+} from '@chakra-ui/react'
+import {For} from 'react-loops'
 
-const searchUrl = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/search`;
+const searchUrl = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/search`
 
 const searchCountry = async (
   searchParam,
@@ -25,69 +24,69 @@ const searchCountry = async (
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
-      body: JSON.stringify({ searchParam }),
-    });
+      body: JSON.stringify({searchParam}),
+    })
 
-    const responseJSON = await response.json();
+    const responseJSON = await response.json()
 
     setSearchResult(
       responseJSON.filter((continent) => {
-        return continent.countries.length > 0;
+        return continent.countries.length > 0
       })
-    );
+    )
 
-    onOpen();
-    setIsLoading(false);
+    onOpen()
+    setIsLoading(false)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 function useDebounce(value, delay) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+  const [debouncedValue, setDebouncedValue] = useState(value)
 
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay);
+    const timer = setTimeout(() => setDebouncedValue(value), delay)
 
     return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
+      clearTimeout(timer)
+    }
+  }, [value, delay])
 
-  return debouncedValue;
+  return debouncedValue
 }
 
 export default function SearchInput() {
-  const [searchText, setSearchText] = useState('');
-  const [searchResult, setSearchResult] = useState([]);
-  const debounceValue = useDebounce(searchText, 500);
-  const [isLoading, setIsLoading] = useState(false);
-  const ref = useRef();
-  const { onClose, isOpen, onOpen } = useDisclosure();
+  const [searchText, setSearchText] = useState('')
+  const [searchResult, setSearchResult] = useState([])
+  const debounceValue = useDebounce(searchText, 500)
+  const [isLoading, setIsLoading] = useState(false)
+  const ref = useRef()
+  const {onClose, isOpen, onOpen} = useDisclosure()
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
-        onClose();
+        onClose()
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [ref, onClose]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [ref, onClose])
 
-  function handleChange({ target: { value } }) {
-    setSearchText(value);
+  function handleChange({target: {value}}) {
+    setSearchText(value)
   }
 
   useEffect(() => {
     if (debounceValue) {
-      setIsLoading(true);
-      searchCountry(debounceValue, setSearchResult, onOpen, setIsLoading);
+      setIsLoading(true)
+      searchCountry(debounceValue, setSearchResult, onOpen, setIsLoading)
     }
-  }, [debounceValue, onOpen]);
+  }, [debounceValue, onOpen])
 
   return (
     <>
@@ -101,7 +100,7 @@ export default function SearchInput() {
       </InputGroup>
 
       {isOpen && (
-        <PseudoBox
+        <Box
           ref={ref}
           position="absolute"
           top={['100px', '60px']}
@@ -125,9 +124,9 @@ export default function SearchInput() {
                     </Box>
                     <For
                       of={continent.countries}
-                      as={(country, { key }) => (
+                      as={(country, {key}) => (
                         <Link key={key} to={`/country/${country.slug}`}>
-                          <PseudoBox
+                          <Box
                             as="li"
                             onClick={onClose}
                             p={2}
@@ -137,7 +136,7 @@ export default function SearchInput() {
                             }}
                           >
                             {country.name}
-                          </PseudoBox>
+                          </Box>
                         </Link>
                       )}
                     />
@@ -148,8 +147,8 @@ export default function SearchInput() {
           ) : (
             <Box>Not country found!</Box>
           )}
-        </PseudoBox>
+        </Box>
       )}
     </>
-  );
+  )
 }

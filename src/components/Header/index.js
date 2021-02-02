@@ -1,8 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Box, Flex } from '@chakra-ui/core';
+import React from 'react'
+import {Link} from 'react-router-dom'
+import {Box, Flex} from '@chakra-ui/react'
 
-import SearchInput from 'components/SearchInput';
+import SearchInput from 'components/SearchInput'
 
 export default function Header() {
   return (
@@ -11,9 +11,9 @@ export default function Header() {
       borderBottom="1px solid"
       borderColor="gray.100"
       p={2}
-      flexDirection={{ xs: 'column', sm: 'row' }}
+      flexDirection={{xs: 'column', sm: 'row'}}
     >
-      <Box as={Link} to="/" mb={{ xs: 3, sm: 0 }} mr={3}>
+      <Box as={Link} to="/" mb={{xs: 3, sm: 0}} mr={3}>
         COVID-19 Tracker
       </Box>
 
@@ -21,5 +21,5 @@ export default function Header() {
         <SearchInput />
       </Box>
     </Flex>
-  );
+  )
 }

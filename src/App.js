@@ -1,15 +1,14 @@
-import React from 'react';
-import { ThemeProvider, CSSReset, Flex } from '@chakra-ui/core';
+import React from 'react'
+import {ChakraProvider, Flex} from '@chakra-ui/react'
 
-import Routes from './routes';
+import Routes from './routes'
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <CSSReset />
+    <ChakraProvider>
       <Flex justifyContent="center">
         <Routes />
       </Flex>
-    </ThemeProvider>
-  );
+    </ChakraProvider>
+  )
 }

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { For } from 'react-loops';
+import React, {useState, useEffect} from 'react'
+import {For} from 'react-loops'
 import {
   Accordion,
-  AccordionHeader,
+  AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
@@ -14,39 +14,39 @@ import {
   Stack,
   Text,
   Flex,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react'
 
-import formatNumber from 'utils/formatNumber';
-import Layout from 'components/Layout';
+import formatNumber from 'utils/formatNumber'
+import Layout from 'components/Layout'
 
-const url = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/countries`;
+const url = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/countries`
 
 const fetchCountries = async (setContinents) => {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url)
 
-    const responseJSON = await response.json();
+    const responseJSON = await response.json()
 
-    setContinents(responseJSON);
+    setContinents(responseJSON)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
-function StackInline({ children }) {
+function StackInline({children}) {
   return (
     <Stack isInline alignItems="center" justifyContent="space-between">
       {children}
     </Stack>
-  );
+  )
 }
 
 export default function Home() {
-  const [continents, setContinents] = useState([]);
+  const [continents, setContinents] = useState([])
 
   useEffect(() => {
-    fetchCountries(setContinents);
-  }, []);
+    fetchCountries(setContinents)
+  }, [])
 
   return (
     <Layout>
@@ -60,12 +60,12 @@ export default function Home() {
             of={continents}
             as={(continent) => (
               <AccordionItem>
-                <AccordionHeader bg="gray.100">
+                <AccordionButton bg="gray.100">
                   <Box flex="1" textAlign="left">
                     {continent.name}
                   </Box>
                   <AccordionIcon />
-                </AccordionHeader>
+                </AccordionButton>
                 <AccordionPanel pb={4}>
                   <Grid
                     gridTemplateColumns="repeat(auto-fit, minmax(280px, 1fr))"
@@ -88,14 +88,14 @@ export default function Home() {
                             </StackInline>
                             <Divider />
                             <StackInline>
-                              <Badge variantColor="blue">Population</Badge>
+                              <Badge colorScheme="blue">Population</Badge>
                               <Text>
                                 {formatNumber(country.population) ?? 'N/A'}
                               </Text>
                             </StackInline>
                             <Divider />
                             <StackInline>
-                              <Badge variantColor="red">Total Cases</Badge>
+                              <Badge colorScheme="red">Total Cases</Badge>
                               <Text>{formatNumber(country.cases.total)}</Text>
                             </StackInline>
                             <Divider />
@@ -104,7 +104,7 @@ export default function Home() {
                               alignItems="center"
                               justifyContent="flex-end"
                             >
-                              <Badge variantColor="green">Last Update</Badge>
+                              <Badge colorScheme="green">Last Update</Badge>
                               <Text>{country.last_update}</Text>
                             </Stack>
                           </Stack>
@@ -119,5 +119,5 @@ export default function Home() {
         </Accordion>
       )}
     </Layout>
-  );
+  )
 }

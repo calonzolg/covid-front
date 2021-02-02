@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { For } from 'react-loops';
-import { useParams } from 'react-router-dom';
+import React, {useEffect, useState} from 'react'
+import {For} from 'react-loops'
+import {useParams} from 'react-router-dom'
 import {
   Spinner,
   Box,
@@ -10,40 +10,40 @@ import {
   Grid,
   Badge,
   Divider,
-} from '@chakra-ui/core';
+} from '@chakra-ui/react'
 
-import Layout from 'components/Layout';
-import NotFound from 'pages/NotFound';
-import formatNumber from 'utils/formatNumber';
+import Layout from 'components/Layout'
+import NotFound from 'pages/NotFound'
+import formatNumber from 'utils/formatNumber'
 
-const url = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/countries`;
+const url = `${process.env.REACT_APP_COVID_BACKEND_URL}/api/countries`
 
 const fetchCountry = async (setState, slug) => {
   try {
-    const response = await fetch(`${url}/${slug}`);
+    const response = await fetch(`${url}/${slug}`)
 
-    const responseJSON = await response.json();
+    const responseJSON = await response.json()
 
-    setState(responseJSON);
+    setState(responseJSON)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
-function StatisticsStack({ keyValue, value }) {
+function StatisticsStack({keyValue, value}) {
   function handleVariantColor(val) {
     switch (val) {
       case 'recovered':
-        return 'green';
+        return 'green'
 
       case 'critical':
-        return 'red';
+        return 'red'
 
       case 'new':
-        return 'blue';
+        return 'blue'
 
       default:
-        return 'gray';
+        return 'gray'
     }
   }
 
@@ -52,30 +52,30 @@ function StatisticsStack({ keyValue, value }) {
       <Text textTransform="capitalize" fontWeight="Bold">
         {keyValue}:
       </Text>
-      <Badge fontSize="xl" variantColor={handleVariantColor(keyValue)}>
+      <Badge fontSize="xl" colorScheme={handleVariantColor(keyValue)}>
         {formatNumber(value) ?? 'N/A'}
       </Badge>
     </Stack>
-  );
+  )
 }
 
 export default function Details() {
-  const { slug } = useParams();
-  const [country, setCountry] = useState(undefined);
+  const {slug} = useParams()
+  const [country, setCountry] = useState(undefined)
 
   useEffect(() => {
-    fetchCountry(setCountry, slug);
-  }, [slug]);
+    fetchCountry(setCountry, slug)
+  }, [slug])
 
   if (!country) {
-    return <Spinner />;
+    return <Spinner />
   }
 
   if (country.length <= 0) {
-    return <NotFound />;
+    return <NotFound />
   }
 
-  const countryArray = country[0];
+  const countryArray = country[0]
 
   return (
     <Layout>
@@ -116,7 +116,7 @@ export default function Details() {
           >
             <For
               in={countryArray.cases}
-              as={(countryCase, { key }) => (
+              as={(countryCase, {key}) => (
                 <StatisticsStack keyValue={key} value={countryCase} />
               )}
             />
@@ -134,7 +134,7 @@ export default function Details() {
           >
             <For
               in={countryArray.deaths}
-              as={(countryDeath, { key }) => (
+              as={(countryDeath, {key}) => (
                 <StatisticsStack keyValue={key} value={countryDeath} />
               )}
             />
@@ -152,7 +152,7 @@ export default function Details() {
           >
             <For
               in={countryArray.tests}
-              as={(countryTest, { key }) => (
+              as={(countryTest, {key}) => (
                 <StatisticsStack keyValue={key} value={countryTest} />
               )}
             />
@@ -160,5 +160,5 @@ export default function Details() {
         </Box>
       </Box>
     </Layout>
-  );
+  )
 }
